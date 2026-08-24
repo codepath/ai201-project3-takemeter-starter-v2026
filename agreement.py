@@ -7,7 +7,9 @@ out how often you matched and lists every post where you didn't.
 
     python agreement.py --help
     python agreement.py
-    python agreement.py --staff data/staff_labels.csv --mine my_labels.csv
+    python agreement.py --staff-posts data/staff_posts.csv \
+                        --staff-labels data/staff_labels.csv --mine my_labels.csv
+    python agreement.py --staff data/staff_combined.csv --mine my_labels.csv
 
 **Label the posts before you run this.** The rate is arithmetic and the script
 does it for you. The adjudication is the graded part and the script deliberately
@@ -16,9 +18,13 @@ does not touch it — it hands you the disagreements and an empty column.
 This is the only instrument you have that can tell a labelling problem from a
 model problem, which is exactly what Milestone 4 asks you to use it for.
 
-Both files need a `text` column and a `label` column. Posts are matched on their
-text, so paste it unchanged — if you retype or trim a post it won't match and
-the script will tell you which one.
+The staff set comes as two files — the posts, and the labels your TF sends you
+once yours are done. They join on `id`. Your own file needs a `text` column and
+a `label` column. If you happen to have the staff posts and labels already in
+one file, pass it with `--staff` instead.
+
+Posts are matched on their text, so paste it unchanged — if you retype or trim
+a post it won't match and the script will tell you which one.
 """
 
 import argparse
@@ -53,6 +59,11 @@ def label_column(df, path):
     print(f"{path} has no label column. Looked for: {', '.join(LABEL_COLUMNS)}.",
           file=sys.stderr)
     print(f"Found: {', '.join(df.columns)}", file=sys.stderr)
+    if "text" in df.columns and "id" in df.columns:
+        print("That looks like the staff posts on their own — the labels are a", file=sys.stderr)
+        print("separate file. Pass both and they'll be joined on `id`:", file=sys.stderr)
+        print("  python agreement.py --staff-posts posts.csv --staff-labels labels.csv",
+              file=sys.stderr)
     sys.exit(1)
 
 
@@ -77,6 +88,49 @@ def load(path, pd):
     rows = {}
     for text, label in zip(df["text"], df[column]):
         rows[normalise(text)] = (str(text), str(label).strip())
+    return rows
+
+
+def load_pair(posts_path, labels_path, pd):
+    """The staff set as it ships: posts in one file, labels in another, joined on `id`."""
+    for path, what in ((posts_path, "posts"), (labels_path, "labels")):
+        if not Path(path).exists():
+            print(f"No file at {path}.", file=sys.stderr)
+            print(f"That's the staff {what}. Your TF gives you both files — the labels", file=sys.stderr)
+            print("come after you've done your own. Ask in the help channel if you", file=sys.stderr)
+            print("haven't been sent them — this milestone can't start without them.", file=sys.stderr)
+            sys.exit(1)
+
+    posts = pd.read_csv(posts_path)
+    labels = pd.read_csv(labels_path)
+
+    for df, path, needed in ((posts, posts_path, "text"), (labels, labels_path, None)):
+        if "id" not in df.columns:
+            print(f"{path} has no 'id' column, so the two files can't be joined.", file=sys.stderr)
+            print(f"Found: {', '.join(df.columns)}", file=sys.stderr)
+            sys.exit(1)
+        if needed and needed not in df.columns:
+            print(f"{path} has no '{needed}' column. Found: {', '.join(df.columns)}", file=sys.stderr)
+            sys.exit(1)
+
+    column = label_column(labels, labels_path)
+    by_id = dict(zip(labels["id"], labels[column]))
+
+    rows = {}
+    unlabelled = 0
+    for post_id, text in zip(posts["id"], posts["text"]):
+        if post_id not in by_id:
+            unlabelled += 1
+            continue
+        rows[normalise(text)] = (str(text), str(by_id[post_id]).strip())
+
+    if not rows:
+        print(f"No `id` in {posts_path} matched one in {labels_path}.", file=sys.stderr)
+        print("They're meant to be the same set — check you were sent the pair that", file=sys.stderr)
+        print("go together.", file=sys.stderr)
+        sys.exit(1)
+    if unlabelled:
+        print(f"[look at] {unlabelled} staff posts have no label in {labels_path}.\n")
     return rows
 
 
@@ -120,8 +174,12 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
-    parser.add_argument("--staff", default="data/staff_labels.csv",
-                        help="the labelled set your TF gives you")
+    parser.add_argument("--staff-posts", default="data/staff_posts.csv",
+                        help="the staff posts your TF gives you")
+    parser.add_argument("--staff-labels", default="data/staff_labels.csv",
+                        help="the staff labels, joined to the posts on `id`")
+    parser.add_argument("--staff", default=None,
+                        help="both in one file, if you already have it that way")
     parser.add_argument("--mine", default="my_staff_labels.csv",
                         help="the same posts, labelled by you")
     parser.add_argument("--out", default="agreement_results.json")
@@ -133,7 +191,10 @@ def main():
         print("pandas isn't installed. Run: pip install -r requirements.txt", file=sys.stderr)
         sys.exit(1)
 
-    staff = load(args.staff, pd)
+    if args.staff:
+        staff = load(args.staff, pd)
+    else:
+        staff = load_pair(args.staff_posts, args.staff_labels, pd)
     mine = load(args.mine, pd)
     matched, disagreements, missing, extra = compare(staff, mine)
 

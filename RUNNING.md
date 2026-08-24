@@ -241,12 +241,21 @@ Staff labelled 30 posts with your taxonomy. You label the same 30, then compare.
 python agreement.py
 ```
 
-Two files, both with a `text` column and a `label` column:
+Three files. The staff set arrives as a pair — the posts, then the labels once
+yours are done — and the script joins them on `id`:
 
 | File | Where it comes from |
 |---|---|
-| `data/staff_labels.csv` | Your TF gives you this. **Don't open the labels until you've done yours** |
-| `my_staff_labels.csv` | You make it: the same posts, labelled by you |
+| `data/staff_posts.csv` | Your TF gives you this: the 30 posts, no labels |
+| `data/staff_labels.csv` | Your TF gives you this too. **Don't open it until you've done yours** |
+| `my_staff_labels.csv` | You make it: the same posts, labelled by you, with `text` and `label` columns |
+
+Put both staff files in `data/` under those names and the bare command finds
+them. Anywhere else, point at them:
+
+```bash
+python agreement.py --staff-posts posts.csv --staff-labels labels.csv
+```
 
 Posts are matched on their text, so **paste it unchanged**. Retype or trim a
 post and it won't match — the script tells you which ones didn't.
@@ -314,6 +323,8 @@ README has a block to fill in for each one.
 | `labels_template.csv` | The shape it needs |
 | `label_definitions.txt` | Your definitions, for the baseline |
 | `data/practice_labels.csv` | The 60-post practice set used in class |
+| `data/staff_posts.csv` | The staff set's posts. **Your TF gives you this** |
+| `data/staff_labels.csv` | The staff set's labels. **Your TF gives you this** |
 | `README.md` | Your submission |
 | `results.json` | Written and committed by the notebook |
 | `test_split.csv` | Your held-out posts, committed by the notebook. `baseline.py` reads it |
