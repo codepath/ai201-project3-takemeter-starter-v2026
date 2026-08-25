@@ -2,8 +2,13 @@
 """
 The agreement check. ← UNIT 6, MILESTONE 3
 
-Staff labelled 30 posts with your taxonomy. You label the same 30. This works
+Staff labelled 30 posts under the taxonomy in `data/staff_taxonomy.md`. You
+label the same 30 under those same definitions — not your own — and this works
 out how often you matched and lists every post where you didn't.
+
+Read `data/staff_taxonomy.md` first. Applying somebody else's written rule the
+way they applied it is the whole exercise, and it is the only evidence you have
+about whether your own 200 labels were consistent.
 
     python agreement.py --help
     python agreement.py
@@ -18,10 +23,11 @@ does not touch it — it hands you the disagreements and an empty column.
 This is the only instrument you have that can tell a labelling problem from a
 model problem, which is exactly what Milestone 4 asks you to use it for.
 
-The staff set comes as two files — the posts, and the labels your TF sends you
-once yours are done. They join on `id`. Your own file needs a `text` column and
-a `label` column. If you happen to have the staff posts and labels already in
-one file, pass it with `--staff` instead.
+The staff set comes as two files. `data/staff_posts.csv` and
+`data/staff_taxonomy.md` ship in the starter; `data/staff_labels.csv` is the
+one your TF sends you, once yours are done. Posts and labels join on `id`. Your
+own file needs a `text` column and a `label` column. If you happen to have the
+staff posts and labels already in one file, pass it with `--staff` instead.
 
 Posts are matched on their text, so paste it unchanged — if you retype or trim
 a post it won't match and the script will tell you which one.
@@ -72,8 +78,9 @@ def load(path, pd):
     if not Path(path).exists():
         print(f"No file at {path}.", file=sys.stderr)
         if "staff" in str(path):
-            print("That's the set your TF gives you. Ask in the help channel if you", file=sys.stderr)
-            print("haven't been sent it — this milestone can't start without it.", file=sys.stderr)
+            print("That's the staff set. `data/staff_posts.csv` ships in the starter;", file=sys.stderr)
+            print("`data/staff_labels.csv` is the one your TF sends you once your own", file=sys.stderr)
+            print("labels are done. Ask in the help channel if you haven't been sent it.", file=sys.stderr)
         else:
             print("Make it by copying the staff set's posts into a CSV with a `text`", file=sys.stderr)
             print("column and a `label` column, then labelling them yourself.", file=sys.stderr)
@@ -96,9 +103,9 @@ def load_pair(posts_path, labels_path, pd):
     for path, what in ((posts_path, "posts"), (labels_path, "labels")):
         if not Path(path).exists():
             print(f"No file at {path}.", file=sys.stderr)
-            print(f"That's the staff {what}. Your TF gives you both files — the labels", file=sys.stderr)
-            print("come after you've done your own. Ask in the help channel if you", file=sys.stderr)
-            print("haven't been sent them — this milestone can't start without them.", file=sys.stderr)
+            print(f"That's the staff {what}. The posts ship in the starter under", file=sys.stderr)
+            print("data/staff_posts.csv; the labels are what your TF sends you once", file=sys.stderr)
+            print("your own are done. Ask in the help channel if you're missing either.", file=sys.stderr)
             sys.exit(1)
 
     posts = pd.read_csv(posts_path)
@@ -241,9 +248,9 @@ def main():
 
     print(f"\nWrote {args.out}. Commit it.")
     print("\nThen sort each disagreement into one of three piles:")
-    print("  (a) your rule covered it and you applied it loosely — a consistency problem")
-    print("  (b) your rule genuinely doesn't say — a taxonomy gap")
-    print("  (c) your rule and staff's are both defensible — argue yours")
+    print("  (a) the rule covered it and you applied it loosely — a consistency problem")
+    print("  (b) the rule genuinely doesn't say — a gap in the definitions")
+    print("  (c) the rule is ambiguous here and your reading is defensible — argue it")
     print("\n(b) and (c) are the interesting ones, and (c) is a legitimate win.")
     return 0
 

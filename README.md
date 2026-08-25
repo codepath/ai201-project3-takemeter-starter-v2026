@@ -267,23 +267,33 @@ of next week's variance. -->
 
 ## Agreement Report
 
-<!-- Your rate against the staff set, and every disagreement adjudicated. -->
+<!-- Your rate against the staff set, and every disagreement adjudicated.
+
+     Remember you labelled these 30 under the STAFF taxonomy in
+     data/staff_taxonomy.md, not your own — so every argument below is made
+     from those definitions and those decision rules. -->
 
 **Agreement rate:** ___ / 30 = ___%
 
-<!-- Nobody grades this number. A 60% who argues every disagreement from their
-     own rule beats a 95% who wrote "staff was right" nine times. -->
+<!-- Nobody grades this number. A 60% who argues every disagreement from the
+     stated rules beats a 95% who wrote "staff was right" nine times. Several
+     of the 30 were chosen because they're genuinely ambiguous — you should be
+     winning some of these. -->
 
 **Disagreements**
 
 <!-- Three lines each: the post, both labels, and who you think is right and
-     why — grounded in YOUR definitions.
+     why — grounded in the staff definitions you were both applying.
 
      Then sort each into one of three piles:
-       (a) my rule covered it and I applied it loosely  → a consistency problem
-       (b) my rule genuinely doesn't say                → a taxonomy gap
-       (c) my rule says one thing, staff's says another → two defensible
-           taxonomies. Argue yours. This is a legitimate win. -->
+       (a) the rule covered it and I applied it loosely → a consistency problem
+       (b) the rule genuinely doesn't say               → a gap in the definitions
+       (c) the rule is ambiguous here and my reading is defensible → argue it.
+           This is a legitimate win.
+
+     Pile (a) is the one that matters most for your diagnosis: if you applied a
+     written rule two different ways on 30 posts, that is direct evidence about
+     what you did across your own 200. -->
 
 **1.**
 > *The post:*
@@ -371,7 +381,8 @@ learned:**
        [ ] Agreement Report with every disagreement adjudicated
        [ ] One improvement, with Run Log — After
        [ ] What's Still Broken
-       [ ] results_three_seeds.json, baseline_results.json and
+       [ ] results_three_seeds_before.json, results_three_seeds_after.json,
+           baseline_results.json and
            agreement_results.json committed
        [ ] At least four new commits
        [ ] The SAME repository URL as last week

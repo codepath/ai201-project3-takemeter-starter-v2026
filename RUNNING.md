@@ -138,7 +138,9 @@ Section 1 clones your repo into the session. Which means:
 - **Nothing to upload.** `labels.csv` and `data/practice_labels.csv` are
   already there.
 - **Nothing to download.** Sections 5 and 6 commit `results.json` and
-  `results_three_seeds.json` and push them.
+  `results_three_seeds_before.json` and push them.
+  Set `RUN_LABEL = "after"` in that cell before the Milestone 5 re-run, or the
+  improvement overwrites the numbers you're comparing against.
 
 The clone is a **snapshot, taken when you ran section 1.** Add rows to
 `labels.csv` on your laptop mid-session and the notebook won't see them —
@@ -235,20 +237,28 @@ Trained** table ready to paste.
 
 ## The agreement check — unit 6
 
-Staff labelled 30 posts with your taxonomy. You label the same 30, then compare.
+Staff labelled 30 posts under the taxonomy in `data/staff_taxonomy.md`. You
+label the same 30 under **those** definitions — not the ones you designed in
+unit 5 — and then compare.
 
 ```bash
 python agreement.py
 ```
 
-Three files. The staff set arrives as a pair — the posts, then the labels once
-yours are done — and the script joins them on `id`:
+Four files. The posts and the rules ship with the starter; only the answers
+come from your TF, and only after yours are done. Posts and labels join on `id`:
 
 | File | Where it comes from |
 |---|---|
-| `data/staff_posts.csv` | Your TF gives you this: the 30 posts, no labels |
-| `data/staff_labels.csv` | Your TF gives you this too. **Don't open it until you've done yours** |
+| `data/staff_taxonomy.md` | **Ships in the starter.** The three definitions and the decision rules staff used. Read it first — you label under *these*, not your own |
+| `data/staff_posts.csv` | **Ships in the starter.** The 30 posts, no labels |
+| `data/staff_labels.csv` | **Your TF gives you this**, once your own labels are done |
 | `my_staff_labels.csv` | You make it: the same posts, labelled by you, with `text` and `label` columns |
+
+**You label the staff set under the staff taxonomy, not the one you designed in
+unit 5.** Your own taxonomy was yours to invent; this one is somebody else's to
+apply, and whether you can apply a written rule the way its authors did is the
+only evidence you have about whether your own 200 labels were consistent.
 
 Put both staff files in `data/` under those names and the bare command finds
 them. Anywhere else, point at them:
@@ -323,12 +333,14 @@ README has a block to fill in for each one.
 | `labels_template.csv` | The shape it needs |
 | `label_definitions.txt` | Your definitions, for the baseline |
 | `data/practice_labels.csv` | The 60-post practice set used in class |
-| `data/staff_posts.csv` | The staff set's posts. **Your TF gives you this** |
+| `data/staff_taxonomy.md` | The staff set's definitions and decision rules. Ships here |
+| `data/staff_posts.csv` | The staff set's 30 posts. Ships here |
 | `data/staff_labels.csv` | The staff set's labels. **Your TF gives you this** |
 | `README.md` | Your submission |
 | `results.json` | Written and committed by the notebook |
 | `test_split.csv` | Your held-out posts, committed by the notebook. `baseline.py` reads it |
-| `results_three_seeds.json` | Written and committed in unit 6 |
+| `results_three_seeds_before.json` | Written and committed in unit 6, section 6 |
+| `results_three_seeds_after.json` | The same cell re-run with `RUN_LABEL = "after"`, in Milestone 5 |
 | `baseline_results.json` | Written by `baseline.py`. **Commit it** |
 | `agreement_results.json` | Written by `agreement.py`. **Commit it** |
 | `my_staff_labels.csv` | Your labels on the staff set. **You create this** |
