@@ -2,36 +2,17 @@
 
 Everything about how the starter works.
 
-This pair is different from the last two: **the training runs in a hosted
-notebook, not on your machine.** Your laptop does the reading, the labelling,
-and the baseline. Colab does the training.
+This pair is different from the last two: **you train a model.** It runs on
+your own machine, in a notebook, from inside this repo. No accounts, no keys,
+nothing hosted.
 
 ---
 
 ## Before your first class
 
-Setup is in **two halves that don't touch each other.** Your device gets a
-virtual environment. Colab gets an account and a token. Nothing you install
-locally has anything to do with the notebook, and nothing you set up for Colab
-affects your machine.
-
-Do both before your first session. The [environment setup page](../pages/ide_setup)
-has the per-operating-system commands.
-
-### On your device — the virtual environment
-
-The venv is for **one script**: `baseline.py`, the zero-shot baseline. That's
-unit 6, Milestone 1. The notebook never touches it — Colab has its own Python,
-and section 1 installs what it needs there.
-
-So why set it up a week before you use it? Because `test.py` is what tells you
-your Python is a version the pinned packages don't support, or that you're short
-on disk, or that the 1.6 GB baseline model still hasn't downloaded. Each of
-those is a twenty-minute problem this week and a dead breakout next week.
-
-**Your disk needs more room — about 9 GB free, up from 6.** The baseline model
-is roughly 1.6 GB and PyTorch is not small. `test.py` checks this. Local disk
-only — Colab's storage isn't your problem.
+One setup, one virtual environment, everything in this repo. The
+[environment setup page](../pages/ide_setup) has the per-operating-system
+commands.
 
 ```bash
 python3 -m venv .venv
@@ -40,130 +21,91 @@ pip install -r requirements.txt
 python test.py
 ```
 
-**`python test.py` passing is what unit 6 needs.** Unit 5 doesn't use the venv
-at all — for that, see the two Colab steps below.
+**`python test.py` passing is what you need before your first session.** It
+checks your Python version against the pins, your disk, your memory, and
+whether the packages import.
+
+**Your disk needs about 9 GB free, up from 6.** The baseline model is roughly
+1.6 GB and PyTorch is not small.
+
+**Your machine needs about 6 GB of RAM.** Two things here are memory-hungry:
+`baseline.py` peaks around 1.8 GB loading the zero-shot model, and the training
+run peaks around 2.1 GB. Neither is comfortable beside an editor and a browser
+on a 4 GB machine. `test.py` warns you.
 
 You'll see one `[WARN] Baseline model — not downloaded yet`. That's expected in
-unit 5. **Clear it before the unit 6 session** by running the baseline once —
-downloading 1.6 GB during class is not how you want to spend the breakout.
+unit 5. **Clear it before the unit 6 session** by running `python baseline.py`
+once — downloading 1.6 GB during class is not how you want to spend a breakout.
 
-### For Colab — an account and a token
+> **No API key and no accounts for this pair.** Nothing here calls a hosted
+> model. The baseline and the training both run on your own machine.
 
-Two things, neither of which installs anything. **This is all unit 5 needs.**
+### What you'll be training on
 
-**A Google account**, for Colab. No card, no paid tier. You already have one if
-you set up an API key in unit 1.
+`test.py` tells you, and so does section 1 of the notebook. There are three
+possibilities and all of them work:
 
-**A GitHub token**, so the notebook can read your repo and commit back to it.
-The steps are in the next section — do them now, not during a session.
+| Device | What it means | Speed |
+|---|---|---|
+| `cuda` | An NVIDIA GPU | Under a minute per seed |
+| `mps` | Apple Silicon — M1 and later | Fast; much quicker than the CPU path |
+| `cpu` | Everything else | A few minutes per seed. Three seeds is a coffee, not an afternoon |
 
-> ⚠️ **Don't make a venv in Colab.** You'll see `!pip install` in section 1 and
-> may be tempted. Colab is already an isolated machine that gets thrown away —
-> a venv inside it does nothing except break the link between what you install
-> and what the notebook can import.
-
-> **No API key is needed for this pair.** Nothing here calls a hosted model.
-> The baseline runs locally and the training runs on Colab's GPU.
-
----
-
-## The GitHub token — once, before your first session
-
-The notebook clones your repo and pushes its results back, so nothing has to be
-uploaded or downloaded by hand. That needs a token. Ten minutes, once.
-
-### 1. Make the token
-
-GitHub → your avatar → **Settings** → **Developer settings** → **Personal
-access tokens** → **Fine-grained tokens** → **Generate new token**.
-
-| Field | What to put |
-|---|---|
-| Token name | `colab-takemeter` |
-| Expiration | Custom — the end of term |
-| Repository access | **Only select repositories** → your TakeMeter repo |
-| Permissions → Repository → **Contents** | **Read and write** |
-
-Contents is the only permission you need. Leave the rest alone.
-
-**Generate token**, then copy it. GitHub shows it once and never again. If you
-lose it, delete it and make another — that's routine, not a disaster.
-
-### 2. Put it in Colab, not in the notebook
-
-Open the notebook in Colab (see below), then in the left sidebar click the
-**🔑 key icon** → **Add new secret**:
-
-| Field | Value |
-|---|---|
-| Name | `GH_TOKEN` — exactly this |
-| Value | the token you copied |
-| Notebook access | **on** |
-
-Secrets belong to your Google account. They aren't stored in the notebook, so
-they don't travel to anyone you share it with, and they survive a runtime reset.
-
-> ⚠️ **Never paste the token into a cell.** Cell outputs get saved, and a saved
-> token in a public repo is a token strangers can push with. The notebook reads
-> it from the secret and never prints it — leave it that way. If you think
-> you've exposed one, delete it on GitHub and make a new one.
-
-**The Notebook access toggle is per notebook.** If you ever start from a fresh
-copy, switch it on again there.
+⚠️ **Write down which one you get.** It is part of your result, not a detail
+about your laptop. Two people running the same notebook on the same data with
+the same seed can get different numbers, because different hardware does the
+arithmetic in a slightly different order. Unit 6 asks you to report it beside
+your three seeds, and `results.json` records it for you.
 
 ---
 
 ## The notebook
 
-`takemeter.ipynb` runs in **Google Colab**, not on your machine.
+`takemeter.ipynb` runs **on your own machine**, from inside this repo.
 
-1. Open [colab.research.google.com](https://colab.research.google.com) →
-   **File → Open notebook** → the **GitHub** tab → paste your repo URL → pick
-   `takemeter.ipynb`.
-2. **Runtime → Change runtime type → T4 GPU.**
-3. Fill in the four lines at the top of section 1's connect cell — GitHub
-   username, repo name, your name, your email — and run section 1.
+1. Open it in VS Code (or `jupyter notebook`, if you prefer).
+2. **Pick the kernel: the `.venv` inside this project.** In VS Code that's the
+   selector in the top right. Getting this wrong is the most common way the
+   first cell fails — it will say a package isn't installed when it is,
+   because it's looking at a different Python.
+3. Fill in the two lines at the top of section 1's second cell — your name and
+   email. They only label your results.
 
-**Open it from GitHub, not by uploading.** Uploading gives you the notebook and
-nothing else. Opening it from your repo is what lets section 1 clone the rest.
+> ⚠️ **Open it from your repo, not from a copy.** The notebook writes next to
+> your code and expects `labels.csv` to be there. If you open a copy from your
+> Downloads folder, it will tell you so rather than failing strangely.
 
-> ⚠️ **Set the runtime before running any cell.** Changing it afterwards
-> restarts everything and you run section 1 again. This is the single most
-> common way to lose twenty minutes in this pair.
+### It reads and writes this folder
 
-### It reads and writes your repo
+There is nothing to upload and nothing to download. `labels.csv` is already
+here; `results.json`, `test_split.csv` and `results_three_seeds_*.json` land
+here when the notebook writes them.
 
-Section 1 clones your repo into the session. Which means:
+**Commit them yourself**, the way you commit anything else. Nothing is pushed
+for you.
 
-- **Nothing to upload.** `labels.csv` and `data/practice_labels.csv` are
-  already there.
-- **Nothing to download.** Sections 5 and 6 commit `results.json` and
-  `results_three_seeds_before.json` and push them.
+- Section 5 writes `results.json` and `test_split.csv` — **unit 5**
+- Section 6 writes `results_three_seeds_<label>.json` — **unit 6**.
   Set `RUN_LABEL = "after"` in that cell before the Milestone 5 re-run, or the
   improvement overwrites the numbers you're comparing against.
 
-The clone is a **snapshot, taken when you ran section 1.** Add rows to
-`labels.csv` on your laptop mid-session and the notebook won't see them —
-commit and push there, then re-run the connect cell.
+> **Add rows to `labels.csv` mid-session?** Re-run section 2, which is what
+> reads the file. The notebook holds the data in memory once it has read it.
 
-> **Two machines now write to one repo.** Before you commit anything on your
-> laptop, `git pull`. Skip it and your push is rejected, because Colab got there
-> first. This is the one new way to trip yourself up this pair.
-
-> **Your edits to the notebook itself aren't pushed.** `LABELS` and the settings
-> live in the Colab session, and git can't see a running notebook. That's fine —
-> your taxonomy belongs in your README, which is what gets read.
+> **Your edits to the notebook itself are yours to commit too.** `LABELS`, the
+> settings and the seed live in the file — if you change them, that's a change
+> to your repo like any other.
 
 ### What's in it
 
 | Section | When | What it does |
 |---|---|---|
-| 1. Setup | unit 5 | Installs, and checks you have a GPU |
+| 1. Setup | unit 5 | Reports your device, and confirms it can see your files |
 | 2. Your labels | unit 5 | `LABELS`, the settings, and **the seed** |
 | 3. Split | unit 5 | 70/15/15, stratified |
-| 4. Train | unit 5 | ~10 minutes |
-| 5. Results | unit 5 | Writes `results.json` |
-| 6. Three seeds | **unit 6** | Retrains three times in one cell (~30 min) |
+| 4. Train | unit 5 | Minutes on a laptop CPU, under one on a GPU |
+| 5. Results | unit 5 | Writes `results.json` and `test_split.csv` |
+| 6. Three seeds | **unit 6** | Retrains three times in one cell |
 | 7. Confusion matrix | **unit 6** | Prints a markdown table to paste |
 
 Sections 6 and 7 are next week. Nothing in unit 5 needs them.
@@ -289,9 +231,8 @@ README has a block to fill in for each one.
 | `python baseline.py` | The zero-shot baseline on your held-out posts — **unit 6** |
 | `python agreement.py` | Your labels vs. the staff set — **unit 6** |
 | `python baseline.py --help` | All the options |
-| Colab: section 1 | Connect to your repo — every session |
-| Colab: sections 2–5 | Train once, results pushed — **unit 5** |
-| Colab: sections 6–7 | Three seeds and the matrix — **unit 6** |
+| Notebook: sections 1–5 | Train once, write `results.json` — **unit 5** |
+| Notebook: sections 6–7 | Three seeds and the matrix — **unit 6** |
 
 ---
 
@@ -305,7 +246,7 @@ README has a block to fill in for each one.
 | 2 | Design your labels | README, **Label Taxonomy** |
 | 3 | Write your criteria | `criteria.md` — all five are yours this time |
 | 4 | Collect and label 200 | `labels.csv` |
-| 5 | Run the training | Colab, sections 1–5 |
+| 5 | Run the training | Notebook, sections 1–5 |
 | 6 | Write it up | README |
 
 ### Unit 6 — the test
@@ -313,10 +254,10 @@ README has a block to fill in for each one.
 | Milestone | What you're doing | Where |
 |---|---|---|
 | 1 | Run the baseline | `baseline.py` |
-| 2 | Retrain three times, read the matrix | Colab, sections 6–7 |
+| 2 | Retrain three times, read the matrix | Notebook, sections 6–7 |
 | 3 | Check yourself against the staff labels | `agreement.py` |
 | 4 | Call each criterion, diagnose the misses | README |
-| 5 | Fix one thing and re-run | Colab, section 6 again |
+| 5 | Fix one thing and re-run | Notebook, section 6 with `RUN_LABEL = "after"` |
 | 6 | Say what's still broken | README |
 
 ---
@@ -325,7 +266,7 @@ README has a block to fill in for each one.
 
 | File | What it does |
 |---|---|
-| `takemeter.ipynb` | The training notebook. Runs on Colab |
+| `takemeter.ipynb` | The training notebook. Runs here, on your machine |
 | `baseline.py` | The zero-shot baseline. Runs on your machine |
 | `agreement.py` | Your labels against the staff set. **Unit 6** |
 | `criteria.md` | Your five criteria. **You write all five** |
@@ -351,13 +292,13 @@ README has a block to fill in for each one.
 
 | What you see | What it means |
 |---|---|
-| `NO GPU` in section 1 | Runtime → Change runtime type → T4 GPU, then re-run |
+| Section 1 says `cpu` | Correct on most laptops, and fine. A three-seed run is minutes. Nothing to fix |
 | `CLONE FAILED` | Read the three causes it prints. Usually `REPO` has the whole URL in it instead of just the name |
-| `SecretNotFoundError` | The `GH_TOKEN` secret isn't set, or **Notebook access** is off for it. 🔑 in the sidebar |
+| `ModuleNotFoundError` in the notebook | Wrong kernel. Pick the `.venv` inside this project, top right in VS Code |
 | `FileNotFoundError: labels.csv` | It isn't committed and pushed yet. Do that on your laptop, then re-run the connect cell |
 | The push failed, or nothing pushed | Your token expired, or it's missing **Contents: Read and write**. Make a new one |
 | Your files vanished mid-session | The session reset. Re-run section 1 — the clone comes back |
-| `git push` rejected **on your laptop** | Colab has pushed since you last pulled. `git pull`, then push |
+| The machine crawls during training | Close the browser and anything heavy. Training peaks around 2.1 GB |
 | `KeyError` during training | A label in your CSV isn't in `LABELS`. Check capitals and spaces |
 | Training takes an hour | You're on CPU. See the first row |
 | Accuracy swings 15 points between seeds | Your dataset is too small or too lopsided for a stable measure. **That's a diagnosis, not a mistake** — write it down |
@@ -382,11 +323,12 @@ At least four commits in unit 5, four more in unit 6. Your commit history is
 what shows your criteria existed before your results did.
 
 The `results*.json` files are deliberately **not** in `.gitignore`. They're
-evidence the run happened. Colab commits those two for you. Everything else —
-`labels.csv`, `criteria.md`, `baseline_results.json`, your README — you commit
-from your laptop.
+evidence the run happened, and so are `test_split.csv` and `labels.csv`. The
+notebook writes them; you commit them, along with `criteria.md`,
+`baseline_results.json` and your README.
 
-**Pull before you commit locally.** Colab has been pushing to the same repo.
+**One machine, one repo.** Everything happens here, so there's nothing to pull
+before you push.
 
 **Do not delete and recreate this repository.** You submit the same URL both
 weeks.

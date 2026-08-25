@@ -42,7 +42,11 @@ MODEL = os.getenv("AI201_MODEL", "gemini-2.5-flash-lite")
 MIN_PYTHON = (3, 11)
 MAX_PYTHON = (3, 14)  # exclusive — 3.14 breaks the pinned stack
 MIN_DISK_GB = 9   # pair 3 steps up: the local baseline model is ~1.6 GB
-MIN_RAM_GB = 4
+# 6, not 4. Two things on this machine are memory-hungry: baseline.py peaks
+# around 1.8 GB loading the zero-shot model, and the unit 5 training run peaks
+# around 2.1 GB. Neither fits comfortably beside an editor and a browser on a
+# 4 GB machine.
+MIN_RAM_GB = 6
 
 # Distribution name on PyPI -> module name you actually import.
 IMPORT_NAMES = {
@@ -202,24 +206,45 @@ def check_machine():
 # --- 4. Secrets -------------------------------------------------------------
 
 def check_torch():
-    """The baseline needs a backend. Training happens on Colab, not here."""
+    """Both the baseline and the training run need a backend, on this machine."""
     try:
         import torch
     except ImportError:
         return report("FAIL", "PyTorch",
                       "Not installed. Run: pip install -r requirements.txt")
-    device = "GPU available" if torch.cuda.is_available() else "CPU only (fine — training is on Colab)"
+
+    if torch.cuda.is_available():
+        device = f"NVIDIA GPU ({torch.cuda.get_device_name(0)}) — training will be quick"
+    elif getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
+        device = "Apple Silicon GPU (MPS) — training will use it"
+    else:
+        device = "CPU only — fine, a three-seed run is minutes not hours"
     report("PASS", "PyTorch", f"{torch.__version__}, {device}")
 
 
 def check_transformers():
-    """The zero-shot baseline. The model itself downloads on first use."""
+    """The zero-shot baseline and the fine-tune. Models download on first use."""
     try:
         import transformers  # noqa: F401
         from transformers import pipeline  # noqa: F401
     except ImportError as exc:
         return report("FAIL", "Transformers", f"Could not import: {exc}")
     report("PASS", "Transformers", "imports cleanly")
+
+
+def check_training_deps():
+    """What the notebook needs beyond transformers, now that it runs here."""
+    missing = []
+    for name in ("datasets", "accelerate"):
+        try:
+            __import__(name)
+        except ImportError:
+            missing.append(name)
+    if missing:
+        return report("FAIL", "Training packages",
+                      f"Missing: {', '.join(missing)}. "
+                      f"Run: pip install -r requirements.txt")
+    report("PASS", "Training packages", "datasets and accelerate both import")
 
 
 def check_baseline_model():
@@ -263,6 +288,7 @@ def main():
     check_packages()
     check_machine()
     check_torch()
+    check_training_deps()
     check_transformers()
     check_baseline_model()
     check_project_files()
