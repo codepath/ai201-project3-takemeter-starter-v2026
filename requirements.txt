@@ -1,8 +1,8 @@
 # AI201 pair 3 — pinned with BOTH lower and upper bounds, on purpose.
 #
-# These are for the work on YOUR MACHINE: the baseline, and reading your data.
-# The training runs in Colab, which installs its own copies — see the first
-# cell of takemeter.ipynb.
+# Everything in this pair runs on YOUR MACHINE — reading your data, the
+# training notebook, and the baseline. No hosted model, no API key, no
+# account. This one install covers all of it.
 #
 # Supported Python: 3.11, 3.12, or 3.13. NOT 3.14.
 
@@ -13,9 +13,9 @@ pandas>=2.0,<3.0
 # own machine — no API key, no account.
 transformers>=4.44,<5.0
 
-# What the training notebook needs on top of transformers. Colab used to
-# install these itself; the notebook now runs here, so they're pinned with
-# everything else.
+# What the training notebook needs on top of transformers. The notebook runs
+# here rather than on a hosted runtime, so these are pinned with everything
+# else instead of being installed by a first cell.
 datasets>=2.20,<4.0
 accelerate>=0.30,<2.0
 

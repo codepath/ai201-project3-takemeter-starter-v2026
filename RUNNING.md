@@ -25,7 +25,7 @@ python test.py
 checks your Python version against the pins, your disk, your memory, and
 whether the packages import.
 
-**Your disk needs about 9 GB free, up from 6.** The baseline model is roughly
+**Your disk needs about 9 GB free, up from 2 in the last two pairs.** The baseline model is roughly
 1.6 GB and PyTorch is not small.
 
 **Your machine needs about 6 GB of RAM.** Two things here are memory-hungry:
@@ -293,11 +293,8 @@ README has a block to fill in for each one.
 | What you see | What it means |
 |---|---|
 | Section 1 says `cpu` | Correct on most laptops, and fine. A three-seed run is minutes. Nothing to fix |
-| `CLONE FAILED` | Read the three causes it prints. Usually `REPO` has the whole URL in it instead of just the name |
 | `ModuleNotFoundError` in the notebook | Wrong kernel. Pick the `.venv` inside this project, top right in VS Code |
-| `FileNotFoundError: labels.csv` | It isn't committed and pushed yet. Do that on your laptop, then re-run the connect cell |
-| The push failed, or nothing pushed | Your token expired, or it's missing **Contents: Read and write**. Make a new one |
-| Your files vanished mid-session | The session reset. Re-run section 1 — the clone comes back |
+| `FileNotFoundError: labels.csv` | Either you haven't created it yet, or the notebook is open from a copy rather than from your repo. Section 1's second cell says which |
 | The machine crawls during training | Close the browser and anything heavy. Training peaks around 2.1 GB |
 | `KeyError` during training | A label in your CSV isn't in `LABELS`. Check capitals and spaces |
 | Training takes an hour | You're on CPU. See the first row |
@@ -307,9 +304,9 @@ README has a block to fill in for each one.
 | `baseline.py` is downloading forever | First run only, ~1.6 GB. Do it before class |
 | The baseline is very slow | Expected. A few seconds per post is what no fine-tuning costs at runtime |
 
-The three usual causes when the notebook fails, in order: the runtime isn't set
-to GPU, the session reset and the clone is gone, or a label in your CSV doesn't
-match `LABELS` exactly.
+The three usual causes when the notebook fails, in order: the kernel is the
+system Python rather than this project's `.venv`, the notebook was opened from
+a copy outside the repo, or a label in your CSV doesn't match `LABELS` exactly.
 
 If none of those fix it, commit your CSV and criteria and write down the error.
 **You have a labelled dataset and a filed standard, which is most of the

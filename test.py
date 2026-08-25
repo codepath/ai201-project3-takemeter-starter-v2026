@@ -7,9 +7,12 @@ Run this before every class:
     python test.py
 
 It checks the things that actually break: your Python version, your virtual
-environment, your pinned packages, your API key, and one real call to the
-model. It is the same file in every unit's starter repo — the checks adapt
-to whatever that unit's requirements.txt pins.
+environment, your pinned packages, whether your machine has the disk and
+memory a training run needs, and whether the baseline model has been
+downloaded. It is the same file in every unit's starter repo — the checks
+adapt to whatever that unit's requirements.txt pins.
+
+This pair needs no API key. Nothing here calls a hosted service.
 
 Nothing here touches your project code, and nothing here is graded.
 """
@@ -35,9 +38,9 @@ for _stream in (sys.stdout, sys.stderr):
 
 
 # --- Course-wide pins -------------------------------------------------------
-# The model lives here, in one place, so a provider change is one edit.
-# Override locally by setting AI201_MODEL in your .env.
-MODEL = os.getenv("AI201_MODEL", "gemini-2.5-flash-lite")
+# This pair has no hosted model and no API key. Both models it uses — the
+# fine-tune and the zero-shot baseline — run on your machine and are named in
+# the notebook and in baseline.py.
 
 MIN_PYTHON = (3, 11)
 MAX_PYTHON = (3, 14)  # exclusive — 3.14 breaks the pinned stack

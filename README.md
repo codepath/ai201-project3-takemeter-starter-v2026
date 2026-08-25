@@ -11,12 +11,13 @@
 > head -5 data/practice_labels.csv     # the shape your labels.csv needs
 > ```
 >
-> Then in Colab, **File → Open notebook → GitHub tab → this repo →
-> `takemeter.ipynb`** — not Upload. Set the runtime to **T4 GPU** and run
-> section 1, which connects the notebook to this repo. Everything else waits
-> until you have data.
+> Then open `takemeter.ipynb` **in this folder** — in VS Code, or with
+> `jupyter notebook` if you prefer. Pick the kernel: the `.venv` inside this
+> project. Run section 1, which reports the hardware you'll be training on.
+> Everything else waits until you have data.
 >
-> Section 1 needs a GitHub token, set up once. **RUNNING.md** has the steps.
+> Nothing to upload, nothing to connect, no accounts and no keys. The notebook
+> runs on your machine and writes next to your code.
 >
 > **The rest of this file is your submission.** Fill it in as you go.
 
@@ -92,7 +93,7 @@
 
 **Where the posts came from:**
 
-**How I laballed them:** <!-- Cold first? Pre-labelled with AI and corrected?
+**How I labelled them:** <!-- Cold first? Pre-labelled with AI and corrected?
 Say so plainly — the disclosure is required, not penalised. -->
 
 **Counts per label:**
