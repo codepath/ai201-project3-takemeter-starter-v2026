@@ -15,7 +15,7 @@ something about your data or your taxonomy earns credit — *"I picked 0.60 F1
 for `reaction` because it's my smallest label and I only have about 50
 examples of it"*. A reason that could be attached to any project does not.
 
-> Missing your own targets next week costs you nothing. Setting a target so
+> Missing your own targets next unit costs you nothing. Setting a target so
 > easy you can't miss it does.
 
 ---

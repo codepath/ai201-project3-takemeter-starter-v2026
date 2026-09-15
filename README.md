@@ -145,7 +145,7 @@ Say so plainly — the disclosure is required, not penalised. -->
 
 **Split sizes:** <!-- train / val / test, and per-label counts in the test
 split. If a label had fewer than about 8 in test, say so — it explains a lot
-of next week's variance. -->
+of next unit's variance. -->
 
 
 
@@ -240,7 +240,7 @@ of next week's variance. -->
 
 ## Verdicts and Diagnoses
 
-<!-- MET or MISSED against LAST WEEK's target. The target has to hold across
+<!-- MET or MISSED against LAST UNIT's target. The target has to hold across
      all three seeds, not turn up sometimes. -->
 
 | # | Criterion | Target | Verdict | How I decided |
@@ -386,7 +386,7 @@ learned:**
            baseline_results.json and
            agreement_results.json committed
        [ ] At least four new commits
-       [ ] The SAME repository URL as last week
+       [ ] The SAME repository URL as last unit
 
      Do not delete and recreate this repository.
      ═════════════════════════════════════════════════════════════════════ -->
