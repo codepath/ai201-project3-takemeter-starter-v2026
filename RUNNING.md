@@ -108,7 +108,7 @@ for you.
 | 6. Three seeds | **unit 6** | Retrains three times in one cell |
 | 7. Confusion matrix | **unit 6** | Prints a markdown table to paste |
 
-Sections 6 and 7 are next week. Nothing in unit 5 needs them.
+Sections 6 and 7 are next unit. Nothing in unit 5 needs them.
 
 ---
 
@@ -310,13 +310,13 @@ a copy outside the repo, or a label in your CSV doesn't match `LABELS` exactly.
 
 If none of those fix it, commit your CSV and criteria and write down the error.
 **You have a labelled dataset and a filed standard, which is most of the
-week's grade.**
+unit's grade.**
 
 ---
 
 ## A note on committing
 
-At least four commits in unit 5, four more in unit 6. Your commit history is
+At least four new commits in unit 5, four more in unit 6. Your commit history is
 what shows your criteria existed before your results did.
 
 The `results*.json` files are deliberately **not** in `.gitignore`. They're
@@ -328,4 +328,4 @@ notebook writes them; you commit them, along with `criteria.md`,
 before you push.
 
 **Do not delete and recreate this repository.** You submit the same URL both
-weeks.
+units.

@@ -31,8 +31,8 @@
      Everything is pasted as TEXT. No screenshots, no images.
 
      ⚠️ The confusion matrix especially. The notebook prints one as a markdown
-     table, ready to copy. A screenshot of a matrix earns nothing, because the
-     grader can't read it. Paste the table.
+     table, ready to copy. A screenshot of a matrix earns nothing. Paste the
+     table.
      ───────────────────────────────────────────────────────────────────────── -->
 
 <!-- ═══════════════════════ UNIT 5 — THE BUILD ═══════════════════════ -->
@@ -369,7 +369,7 @@ learned:**
        [ ] Label Taxonomy includes the decision rule for your hardest boundary
        [ ] The Dataset includes three hard cases
        [ ] results.json and test_split.csv committed (the notebook does this)
-       [ ] At least four commits
+       [ ] At least four new commits
        [ ] Repository URL submitted — WRITE IT DOWN
 
      SUBMISSION CHECKLIST — unit 6
