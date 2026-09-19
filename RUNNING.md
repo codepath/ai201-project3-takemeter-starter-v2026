@@ -11,7 +11,7 @@ nothing hosted.
 ## Before your first class
 
 One setup, one virtual environment, everything in this repo. The
-[environment setup page](../pages/ide_setup) has the per-operating-system
+[environment setup page](https://courses.codepath.org/courses/ai201/pages/ide_setup) has the per-operating-system
 commands.
 
 ```bash
