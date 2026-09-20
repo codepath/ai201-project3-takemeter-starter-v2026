@@ -25,13 +25,17 @@ python test.py
 checks your Python version against the pins, your disk, your memory, and
 whether the packages import.
 
-**Your disk needs about 9 GB free, up from 2 in the last two pairs.** The baseline model is roughly
-1.6 GB and PyTorch is not small.
+**`test.py` checks for about 9 GB of free disk, up from 2 in the last two pairs.**
+The baseline model is roughly 1.6 GB and PyTorch is not small. The course's
+machine requirement is 20 GB free (it's on the setup page linked above), which
+clears this — but check the number, because free disk is the thing people
+don't have.
 
-**Your machine needs about 6 GB of RAM.** Two things here are memory-hungry:
-`baseline.py` peaks around 1.8 GB loading the zero-shot model, and the training
-run peaks around 2.1 GB. Neither is comfortable beside an editor and a browser
-on a 4 GB machine. `test.py` warns you.
+**`test.py` warns under 6 GB of RAM.** The course's machine requirement is 8 GB,
+which clears it. The warning is there because two things here are
+memory-hungry: `baseline.py` peaks around 1.8 GB loading the zero-shot model,
+and the training run peaks around 2.1 GB. Neither is comfortable beside an
+editor and a browser on a 4 GB machine.
 
 You'll see one `[WARN] Baseline model — not downloaded yet`. That's expected in
 unit 5. **Clear it before the unit 6 session** by running `python baseline.py`
