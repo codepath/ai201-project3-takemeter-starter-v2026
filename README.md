@@ -42,10 +42,13 @@
 <!-- Your community, and what your classifier sorts posts into. Three or four
      sentences. -->
 
-
-
+I am posting about the Formula 1 reddit page. My classifiers is news and humor/sarcasm. These classifiers cover the posts that mostly appear in the F1 reddit page.
 ---
 
+** Candidate distinctions I saw while going through posts:
+- Most news post cite a website or a source.
+- Humorous post usually include the joke in the post if told by person in Formula 1
+- There are a lot of images on the F1 page
 ## Label Taxonomy
 
 <!-- Each label: a one-sentence definition and two real examples from your
@@ -54,34 +57,45 @@
      The decision rule is worth a point on its own and it's the thing most
      people leave out. Every taxonomy has a hardest boundary. Name yours. -->
 
-### `label_one`
+### `News`
 
-**Definition:**
-
-**Example 1:**
->
-
-**Example 2:**
->
-
-### `label_two`
-
-**Definition:**
+**Definition:** providing updates news on the latest transfer, driver stories, and results around F1
 
 **Example 1:**
 >
+[Autoracer] Ferrari unveils the fourth SF-26 package at Austin:
+
 
 **Example 2:**
 >
+[Valtteri Bottas] 419.67km commute; Well arrived in Singapore this arvo.
+
+
+
+### `humor-sarcasm`
+
+**Definition:** attempting to make funny statements or make a joke about certain statistics of drivers
+
+**Example 1:**
+>
+Congratulations to Lance Stroll for Completing his 1st Full Race This Year
+
+
+**Example 2:**
+>
+Oscar Piastri’s pre-f1 era tweets are so funny
+
 
 ### The hardest boundary
 
-**Which two labels:**
+**Which two labels:** news and humor-sarcasm
+"Do they think I have a button that says, ‘George engine failure now’?": Toto Wolff slams idea of Mercedes favoring Kimi Antonelli over George Russell
+
 
 **The decision rule I used every time:**
 <!-- e.g. "If the post names a specific checkable fact, it's `analysis`, even
      if the tone is heated." -->
-
+If the post has any newsworthy information, it is listed as news, even if there is sarcasm or humor in the tweet.
 
 
 ---
@@ -92,6 +106,7 @@
      cases. -->
 
 **Where the posts came from:**
+The post came from the F1 reddit page.
 
 **How I labelled them:** <!-- Cold first? Pre-labelled with AI and corrected?
 Say so plainly — the disclosure is required, not penalised. -->
