@@ -54,23 +54,24 @@ whether you hit them:
 ## 1.
 
 <!-- Your criterion. It must name a number. -->
-
+at least 0.90 on the held-out set, on all 3 seeds
 
 
 **Why this target:**
+News is expected to be the vastly majority topic. So, if News is about 75% of my data, 
+always guessing News gets 75%. 0.90 means that the model has to most of the human post to pass the test
 
 
 
 ---
 
 ## 2.
-
 <!-- Your criterion. -->
-
+News has an F1 => 0.90 and humor-sarcasm F1 => 0.65
 
 
 **Why this target:**
-
+Humor has only about 8 posts in the test split, so one miss would move its F1 by about 0.1, so its floor was set looser to absorb that. News has about 22 test post, so a stricter target is helpful
 
 
 ---
@@ -78,35 +79,32 @@ whether you hit them:
 ## 3.
 
 <!-- Your criterion. -->
-
+Humor-sarcasm makes up a minimum of 25% of my labelled data
 
 
 **Why this target:**
-
+Below that value, then the test split has 5 or fewer humor post.
 
 
 ---
 
 ## 4.
-
 <!-- Your criterion. -->
-
-
+At least 80% agreement with the staff labels in agreement.py
 
 **Why this target:**
-
+This is the only check on whether my labels are consistent. If I can't match a writtene rule 80% of the time, low model scores could be the label's fault, not the model's fault.
 
 
 ---
 
 ## 5.
-
 <!-- Your criterion. -->
-
+Predictions with confidence >= 0.9 are correct at least 12 points more often than predictions below 0.9
 
 
 **Why this target:**
-
+Sarcastic news should produce unsure predictions. If confident and unsure predictions are equally accurate, the model is not picking up that boundary at all.
 
 
 ---
