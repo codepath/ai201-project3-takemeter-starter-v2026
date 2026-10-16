@@ -54,37 +54,36 @@ whether you hit them:
 ## 1.
 
 <!-- Your criterion. It must name a number. -->
-at least 0.90 on the held-out set, on all 3 seeds
+Overall accuracy ≥ 0.75 on the held-out test split, on each of the 3 seeds, and at least 15 points above the majority-class share.
+
 
 
 **Why this target:**
-News is expected to be the vastly majority topic. So, if News is about 75% of my data, 
-always guessing News gets 75%. 0.90 means that the model has to most of the human post to pass the test
+With 4 different labels, random guessing gets 25%. The "15 points above majority" part keep the target meaningful for whichever label ends up biggest
 
-
-
+ 
 ---
 
 ## 2.
 <!-- Your criterion. -->
-News has an F1 => 0.90 and humor-sarcasm F1 => 0.65
+Macro F1 ≥ 0.65, and every label's F1 ≥ 0.50, on each of the 3 seeds.
+
 
 
 **Why this target:**
-Humor has only about 8 posts in the test split, so one miss would move its F1 by about 0.1, so its floor was set looser to absorb that. News has about 22 test post, so a stricter target is helpful
-
+A strong news score will not a weak unrelated score. The per-label floor is loose because the smallest label will have a small amount of test, so one miss will move F1 by about 0.15 to 0.2
 
 ---
 
 ## 3.
 
 <!-- Your criterion. -->
-Humor-sarcasm makes up a minimum of 25% of my labelled data
+3. Every label is at least 15% of my labelled data, and each has at least 5 posts in the test split.
+
 
 
 **Why this target:**
-Below that value, then the test split has 5 or fewer humor post.
-
+Below the 15% value, a label has 4 or fewer test posts and its F1 in #2 become noise. 
 
 ---
 
@@ -100,7 +99,7 @@ This is the only check on whether my labels are consistent. If I can't match a w
 
 ## 5.
 <!-- Your criterion. -->
-Predictions with confidence >= 0.9 are correct at least 12 points more often than predictions below 0.9
+Predictions with confidence >= 0.9 are correct at least 12 points more often than predictions below 0.9, if each bucket has at least 5 posts. Otherwise, it will be reported as not measurable for that seed.
 
 
 **Why this target:**

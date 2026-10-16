@@ -74,7 +74,7 @@ I am posting about the Formula 1 reddit page. My classifiers is news and humor/s
 
 ### `humor-sarcasm`
 
-**Definition:** attempting to make funny statements or make a joke about certain statistics of drivers
+**Definition:** attempting to make funny statements or make a joke about certain statistics of drivers;
 
 **Example 1:**
 >
@@ -84,6 +84,33 @@ Congratulations to Lance Stroll for Completing his 1st Full Race This Year
 **Example 2:**
 >
 Oscar Piastri’s pre-f1 era tweets are so funny
+
+### `opinion`
+
+**Definition:** giving an opinion on an F1 that is deemed to cause a discussion
+
+**Example 1:**
+>
+In my opinion the most down to earth and genuine F1 driver out there.
+
+
+**Example 2:**
+>
+In my opinion, the SF71-H is the prettiest looking Ferrari since the F2004. Photo credit goes to u/Kerrentonsnow
+
+### `unrelated`
+
+**Definition:** unrelated: posts that are completely unrelated to Formula 1, such as other motorsports or stories about F1 drivers that are completely unrelated to their F1 careers such as vacation, advice, or random unrelated discussion topics
+
+**Example 1:**
+>
+Parents went on vacation and brought me back my first F1 merchandise!
+
+
+**Example 2:**
+>
+Discussion thread. Where would you take a week long F1 vacation? (A little game to pass the time)
+
 
 
 ### The hardest boundary
