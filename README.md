@@ -42,7 +42,7 @@
 <!-- Your community, and what your classifier sorts posts into. Three or four
      sentences. -->
 
-I am posting about the Formula 1 reddit page. My classifiers is news and humor/sarcasm. These classifiers cover the posts that mostly appear in the F1 reddit page.
+I am posting about the Formula 1 reddit page. My classifiers is news and humor. These classifiers cover the posts that mostly appear in the F1 reddit page.
 ---
 
 ** Candidate distinctions I saw while going through posts:
@@ -72,7 +72,7 @@ I am posting about the Formula 1 reddit page. My classifiers is news and humor/s
 
 
 
-### `humor-sarcasm`
+### `humor`
 
 **Definition:** attempting to make funny statements or make a joke about certain statistics of drivers;
 
@@ -98,9 +98,9 @@ In my opinion the most down to earth and genuine F1 driver out there.
 >
 In my opinion, the SF71-H is the prettiest looking Ferrari since the F2004. Photo credit goes to u/Kerrentonsnow
 
-### `unrelated`
+### `off-topic`
 
-**Definition:** unrelated: posts that are completely unrelated to Formula 1, such as other motorsports or stories about F1 drivers that are completely unrelated to their F1 careers such as vacation, advice, or random unrelated discussion topics
+**Definition:** posts that are not F1 news (current or historical), not a joke about F1, and not an opinion about F1, such as other motorsports, F1 drivers' lives outside their F1 careers (vacations, advice), or general questions and random topics.
 
 **Example 1:**
 >
@@ -115,7 +115,7 @@ Discussion thread. Where would you take a week long F1 vacation? (A little game 
 
 ### The hardest boundary
 
-**Which two labels:** news and humor-sarcasm
+**Which two labels:** news and humor
 "Do they think I have a button that says, ‘George engine failure now’?": Toto Wolff slams idea of Mercedes favoring Kimi Antonelli over George Russell
 
 

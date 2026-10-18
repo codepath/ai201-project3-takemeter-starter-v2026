@@ -71,7 +71,7 @@ Macro F1 ≥ 0.65, and every label's F1 ≥ 0.50, on each of the 3 seeds.
 
 
 **Why this target:**
-A strong news score will not a weak unrelated score. The per-label floor is loose because the smallest label will have a small amount of test, so one miss will move F1 by about 0.15 to 0.2
+A strong news score will not a weak off-topic score. The per-label floor is loose because the smallest label will have a small amount of test, so one miss will move F1 by about 0.15 to 0.2
 
 ---
 
@@ -103,7 +103,7 @@ Predictions with confidence >= 0.9 are correct at least 12 points more often tha
 
 
 **Why this target:**
-Sarcastic news should produce unsure predictions. If confident and unsure predictions are equally accurate, the model is not picking up that boundary at all.
+Sarcastic-humor and news should produce unsure predictions.
 
 
 ---
