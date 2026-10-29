@@ -23,20 +23,24 @@ does not touch it — it hands you the disagreements and an empty column.
 This is the only instrument you have that can tell a labelling problem from a
 model problem, which is exactly what Milestone 4 asks you to use it for.
 
-The staff set comes as two files. `data/staff_posts.csv` and
-`data/staff_taxonomy.md` ship in the starter; `data/staff_labels.csv` is the
-one your TF sends you, once yours are done. Posts and labels join on `id`. Your
-own file needs a `text` column and a `label` column. If you happen to have the
-staff posts and labels already in one file, pass it with `--staff` instead.
+The staff set ships in the starter. `data/staff_posts.csv` and
+`data/staff_taxonomy.md` you can read now. The labels are locked in
+`data/staff_labels.locked`, and this script opens them only once your own file
+has one of the three staff labels on all 30 posts. Posts and labels join on
+`id`. Your own file needs a `text` column and a `label` column. If you happen
+to have the staff posts and labels already in one file, pass it with `--staff`
+instead.
 
 Posts are matched on their text, so paste it unchanged — if you retype or trim
 a post it won't match and the script will tell you which one.
 """
 
 import argparse
+import io
 import json
 import re
 import sys
+import zlib
 from pathlib import Path
 
 # Windows consoles default to a codepage that can't encode the characters this
@@ -50,6 +54,11 @@ for _stream in (sys.stdout, sys.stderr):
         pass
 
 LABEL_COLUMNS = ("label", "staff_label", "my_label", "your_label")
+
+# The staff labels, scrambled so that opening the file doesn't show them. There
+# is no way to unsee an answer key, so they open only after your 30 are done.
+LOCKED_LABELS = Path("data/staff_labels.locked")
+LOCK_KEY = b"ai201-takemeter"
 
 
 def normalise(text):
@@ -77,10 +86,10 @@ def load(path, pd):
     """One labelled file, as {normalised text: (original text, label)}."""
     if not Path(path).exists():
         print(f"No file at {path}.", file=sys.stderr)
-        if "staff" in str(path):
-            print("That's the staff set. `data/staff_posts.csv` ships in the starter;", file=sys.stderr)
-            print("`data/staff_labels.csv` is the one your TF sends you once your own", file=sys.stderr)
-            print("labels are done. Ask in the help channel if you haven't been sent it.", file=sys.stderr)
+        if Path(path).name.startswith("staff"):
+            print("That's the staff set. Both halves ship in the starter: the posts in", file=sys.stderr)
+            print("`data/staff_posts.csv`, the labels locked in `data/staff_labels.locked`.", file=sys.stderr)
+            print("Run `python agreement.py` with no options and it opens them for you.", file=sys.stderr)
         else:
             print("Make it by copying the staff set's posts into a CSV with a `text`", file=sys.stderr)
             print("column and a `label` column, then labelling them yourself.", file=sys.stderr)
@@ -98,18 +107,27 @@ def load(path, pd):
     return rows
 
 
-def load_pair(posts_path, labels_path, pd):
-    """The staff set as it ships: posts in one file, labels in another, joined on `id`."""
-    for path, what in ((posts_path, "posts"), (labels_path, "labels")):
+def load_pair(posts_path, labels_path, pd, labels_text=None):
+    """
+    The staff set as it ships: posts in one file, labels in another, joined on `id`.
+
+    `labels_text` is the labels already opened from the locked file. When it's
+    given, `labels_path` is only the name used in messages.
+    """
+    needed = [(posts_path, "posts")]
+    if labels_text is None:
+        needed.append((labels_path, "labels"))
+    for path, what in needed:
         if not Path(path).exists():
             print(f"No file at {path}.", file=sys.stderr)
             print(f"That's the staff {what}. The posts ship in the starter under", file=sys.stderr)
-            print("data/staff_posts.csv; the labels are what your TF sends you once", file=sys.stderr)
-            print("your own are done. Ask in the help channel if you're missing either.", file=sys.stderr)
+            print(f"data/staff_posts.csv and the labels under {LOCKED_LABELS}.", file=sys.stderr)
+            print("If either is missing from your repo, your fork was made before it was", file=sys.stderr)
+            print("added: click Sync fork on your fork's GitHub page, then git pull.", file=sys.stderr)
             sys.exit(1)
 
     posts = pd.read_csv(posts_path)
-    labels = pd.read_csv(labels_path)
+    labels = pd.read_csv(io.StringIO(labels_text) if labels_text is not None else labels_path)
 
     for df, path, needed in ((posts, posts_path, "text"), (labels, labels_path, None)):
         if "id" not in df.columns:
@@ -139,6 +157,54 @@ def load_pair(posts_path, labels_path, pd):
     if unlabelled:
         print(f"[look at] {unlabelled} staff posts have no label in {labels_path}.\n")
     return rows
+
+
+def unlock_staff_labels(posts_path, mine_path, pd):
+    """
+    The locked staff labels, opened only once all 30 of yours are done.
+
+    Done means every staff post is in your file, matched on its text, with one
+    of the three staff labels. Until then this lists what's missing and stops,
+    and the labels stay locked.
+    """
+    if not Path(posts_path).exists():
+        load_pair(posts_path, LOCKED_LABELS, pd)  # says what's missing, and stops
+
+    data = LOCKED_LABELS.read_bytes()
+    labels_text = zlib.decompress(
+        bytes(b ^ LOCK_KEY[i % len(LOCK_KEY)] for i, b in enumerate(data))
+    ).decode("utf-8")
+    allowed = sorted(set(pd.read_csv(io.StringIO(labels_text))["label"].astype(str).str.strip()))
+
+    posts = pd.read_csv(posts_path)
+    mine = load(mine_path, pd)
+    missing = [text for text in posts["text"] if normalise(text) not in mine]
+    unlabelled = [mine[normalise(text)] for text in posts["text"]
+                  if normalise(text) in mine and mine[normalise(text)][1] not in allowed]
+    if not missing and not unlabelled:
+        return labels_text
+
+    print("The staff labels open only once all 30 of yours are done.\n", file=sys.stderr)
+    if missing:
+        print(f"{len(missing)} of the {len(posts)} staff posts aren't in {mine_path}.",
+              file=sys.stderr)
+        print("Posts are matched on their text, so paste each one unchanged:", file=sys.stderr)
+        for text in missing[:5]:
+            print(f"  - {shorten(text, 60)}", file=sys.stderr)
+        if len(missing) > 5:
+            print(f"  ...and {len(missing) - 5} more", file=sys.stderr)
+        print(file=sys.stderr)
+    if unlabelled:
+        print(f"{len(unlabelled)} posts in {mine_path} don't have one of the staff labels "
+              f"({', '.join(allowed)}):", file=sys.stderr)
+        for text, label in unlabelled[:5]:
+            shown = "blank" if label in ("", "nan") else f"'{label}'"
+            print(f"  - {shorten(text, 50)}  ({shown})", file=sys.stderr)
+        if len(unlabelled) > 5:
+            print(f"  ...and {len(unlabelled) - 5} more", file=sys.stderr)
+        print(file=sys.stderr)
+    print("Fix those, save the file, and run this again.", file=sys.stderr)
+    sys.exit(1)
 
 
 def compare(staff, mine):
@@ -182,9 +248,10 @@ def main():
         epilog=__doc__,
     )
     parser.add_argument("--staff-posts", default="data/staff_posts.csv",
-                        help="the staff posts your TF gives you")
+                        help="the 30 staff posts, which ship in the starter")
     parser.add_argument("--staff-labels", default="data/staff_labels.csv",
-                        help="the staff labels, joined to the posts on `id`")
+                        help="the staff labels as a CSV, joined to the posts on `id`. "
+                             f"Without one, they're opened from {LOCKED_LABELS}")
     parser.add_argument("--staff", default=None,
                         help="both in one file, if you already have it that way")
     parser.add_argument("--mine", default="my_staff_labels.csv",
@@ -200,8 +267,11 @@ def main():
 
     if args.staff:
         staff = load(args.staff, pd)
-    else:
+    elif Path(args.staff_labels).exists() or not LOCKED_LABELS.exists():
         staff = load_pair(args.staff_posts, args.staff_labels, pd)
+    else:
+        labels_text = unlock_staff_labels(args.staff_posts, args.mine, pd)
+        staff = load_pair(args.staff_posts, LOCKED_LABELS, pd, labels_text)
     mine = load(args.mine, pd)
     matched, disagreements, missing, extra = compare(staff, mine)
 

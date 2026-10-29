@@ -187,14 +187,16 @@ unit 5 — and then compare.
 python agreement.py
 ```
 
-Four files. The posts and the rules ship with the starter; only the answers
-come from your TF, and only after yours are done. Posts and labels join on `id`:
+Four files. Three ship with the starter, and the answers are locked:
+`agreement.py` opens them only once your own file has one of the three staff
+labels on all 30 posts. Until then it tells you what's missing. Posts and
+labels join on `id`:
 
 | File | Where it comes from |
 |---|---|
 | `data/staff_taxonomy.md` | **Ships in the starter.** The three definitions and the decision rules staff used. Read it first — you label under *these*, not your own |
 | `data/staff_posts.csv` | **Ships in the starter.** The 30 posts, no labels |
-| `data/staff_labels.csv` | **Your TF gives you this**, once your own labels are done |
+| `data/staff_labels.locked` | **Ships in the starter, locked.** The staff labels. `agreement.py` opens them once your own 30 are done |
 | `my_staff_labels.csv` | You make it: the same posts, labelled by you, with `text` and `label` columns |
 
 **You label the staff set under the staff taxonomy, not the one you designed in
@@ -202,12 +204,9 @@ unit 5.** Your own taxonomy was yours to invent; this one is somebody else's to
 apply, and whether you can apply a written rule the way its authors did is the
 only evidence you have about whether your own 200 labels were consistent.
 
-Put both staff files in `data/` under those names and the bare command finds
-them. Anywhere else, point at them:
-
-```bash
-python agreement.py --staff-posts posts.csv --staff-labels labels.csv
-```
+Run the bare command from your project folder and it finds all of them. No
+`data/staff_labels.locked` in your repo? Your fork was made before it was
+added: click **Sync fork** on your fork's GitHub page, then `git pull`.
 
 Posts are matched on their text, so **paste it unchanged**. Retype or trim a
 post and it won't match — the script tells you which ones didn't.
@@ -276,7 +275,7 @@ README has a block to fill in for each one.
 | `data/practice_labels.csv` | The 60-post practice set used in class |
 | `data/staff_taxonomy.md` | The staff set's definitions and decision rules. Ships here |
 | `data/staff_posts.csv` | The staff set's 30 posts. Ships here |
-| `data/staff_labels.csv` | The staff set's labels. **Your TF gives you this** |
+| `data/staff_labels.locked` | The staff set's labels, locked. `agreement.py` opens them once your own 30 are done |
 | `README.md` | Your submission |
 | `results.json` | Written and committed by the notebook |
 | `test_split.csv` | Your held-out posts, committed by the notebook. `baseline.py` reads it |
