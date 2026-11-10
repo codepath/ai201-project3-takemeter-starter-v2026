@@ -184,14 +184,28 @@ If a post that isn't `promo` asks other people to name novels it hasn't named, i
 **Base model:**MPS Apple Silicon
 
 **Settings:** <!-- epochs, learning rate, batch size, seed -->
+```
+3 labels: promo, request, discussion
+Epochs: 3
+Learning rate: 2e-05
+Batch size: 16
+Seed: 42
+```
 
-**Anything I changed from the defaults, and why:**
+**Anything I changed from the defaults, and why:**<br>
+None
 
 **Split sizes:** <!-- train / val / test, and per-label counts in the test
 split. If a label had fewer than about 8 in test, say so — it explains a lot
 of next unit's variance. -->
-
-
+```
+train 160  ·  val 35  ·  test 35
+            train  val  test
+label                       
+promo          52   12    12
+request        46   10    10
+discussion     62   13    13
+```
 
 ---
 
